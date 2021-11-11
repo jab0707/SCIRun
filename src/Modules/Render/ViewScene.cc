@@ -55,23 +55,40 @@ MODULE_INFO_DEF(ViewScene, Render, SCIRun)
 
 Mutex ViewSceneLocks::mutex_("ViewScene");
 
-std::map<std::string, ViewSceneLocksPtr> ViewSceneLockManager::lockMap_;
+VSLMMap ViewSceneLockManager::lockMap_;
 
-ViewSceneLocksPtr ViewSceneLockManager::get(const std::string& id)
+ViewSceneLocksPtr ViewSceneLockManager::get(const Dataflow::Networks::ModuleStateInterface* id)
 {
+  logCritical("ViewSceneLockManager::get {}", __LINE__);
   auto lockIter = lockMap_.find(id);
+  logCritical("ViewSceneLockManager::get {}", __LINE__);
   if (lockIter == lockMap_.end())
   {
+    logCritical("ViewSceneLockManager::get {}", __LINE__);
     auto newLock = std::make_shared<ViewSceneLocks>();
+    logCritical("ViewSceneLockManager::get {}", __LINE__);
     lockMap_[id] = newLock;
+    logCritical("ViewSceneLockManager::get {}", __LINE__);
     return newLock;
   }
+  logCritical("ViewSceneLockManager::get {}", __LINE__);
   return lockIter->second;
 }
 
-void ViewSceneLockManager::remove(const std::string& id)
+void ViewSceneLockManager::remove(const Dataflow::Networks::ModuleStateInterface* id)
 {
-  lockMap_.erase(id);
+  logCritical("ViewSceneLockManager::remove {}", __LINE__);
+  auto lockIter = lockMap_.find(id);
+  logCritical("ViewSceneLockManager::remove {}", __LINE__);
+  if (lockIter != lockMap_.end())
+  {
+    logCritical("ViewSceneLockManager::remove {}", __LINE__);
+    lockIter->second.reset();
+    logCritical("ViewSceneLockManager::remove {}", __LINE__);
+    lockMap_.erase(id);
+    logCritical("ViewSceneLockManager::remove {}", __LINE__);
+  }
+  logCritical("ViewSceneLockManager::remove {}", __LINE__);
 }
 
 ViewScene::ScopedExecutionReporter::ScopedExecutionReporter(ModuleStateHandle state)
@@ -171,12 +188,16 @@ ViewScene::ViewScene() : ModuleWithAsyncDynamicPorts(staticInfo_, true)
 
 ViewScene::~ViewScene()
 {
-  ViewSceneLockManager::remove(id().id_);
+  logCritical("~ViewScene {} {}", __LINE__, __FUNCTION__);
+  ViewSceneLockManager::remove(get_state().get());
+  logCritical("~ViewScene {} {}", __LINE__, __FUNCTION__);
 }
 
 ViewSceneLocks::~ViewSceneLocks()
 {
+  logCritical("~ViewSceneLocks {} {}", __LINE__, __FUNCTION__);
   screenShotMutex_.unlock();
+  logCritical("~ViewSceneLocks {} {}", __LINE__, __FUNCTION__);
 }
 
 void ViewScene::setStateDefaults()
@@ -271,7 +292,9 @@ void ViewScene::portRemovedSlotImpl(const PortId& pid)
 {
   //lock for state modification
   {
-    Guard lock(ViewSceneLockManager::get(id().id_)->staticMutexNeedToChange().get());
+    logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
+    Guard lock(ViewSceneLockManager::get(get_state().get())->staticMutexNeedToChange().get());
+    logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
     auto loc = activeGeoms_.find(pid);
     if (loc != activeGeoms_.end())
       activeGeoms_.erase(loc);
@@ -279,6 +302,8 @@ void ViewScene::portRemovedSlotImpl(const PortId& pid)
   }
 
   fireTransientStateChangeSignalForGeomData();
+
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
 }
 
 void ViewScene::updateTransientList()
@@ -321,12 +346,12 @@ void ViewScene::asyncExecute(const PortId& pid, DatatypeHandle data)
   if (!data) return;
   //lock for state modification
   {
-    LOG_DEBUG("ViewScene::asyncExecute {} before locking", id().id_);
-    Guard lock(ViewSceneLockManager::get(id().id_)->staticMutexNeedToChange().get());
+    logCritical("ViewScene::asyncExecute {} before locking", id().id_);
+    Guard lock(ViewSceneLockManager::get(get_state().get())->staticMutexNeedToChange().get());
 
     get_state()->setTransientValue(Parameters::ScreenshotData, boost::any(), false);
 
-    LOG_DEBUG("ViewScene::asyncExecute {} after locking", id().id_);
+    logCritical("ViewScene::asyncExecute {} after locking", id().id_);
 
     const auto geom = std::dynamic_pointer_cast<GeometryObject>(data);
     if (!geom)
@@ -346,9 +371,10 @@ void ViewScene::asyncExecute(const PortId& pid, DatatypeHandle data)
     }
 
     activeGeoms_[pid] = geom;
-    LOG_DEBUG("asyncExecute added active geom to map: {}", pid.toString());
+    logCritical("asyncExecute added active geom to map: {}", pid.toString());
     updateTransientList();
   }
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
 }
 
 void ViewScene::syncMeshComponentFlags(const std::string& connectedModuleId, ModuleStateHandle state)
@@ -373,7 +399,9 @@ void ViewScene::execute()
   sendOutput(ScreenshotDataGreen, makeShared<DenseMatrix>(0, 0));
   sendOutput(ScreenshotDataBlue, makeShared<DenseMatrix>(0, 0));
 #else
-  Guard lock(ViewSceneLockManager::get(id().id_)->screenShotMutex().get());
+logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
+  Guard lock(ViewSceneLockManager::get(state.get())->screenShotMutex().get());
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
   if (needToExecute() && inputPorts().size() >= 1) // only send screenshot if input is present
   {
     const auto screenshotDataOption = state->getTransientValue(Parameters::ScreenshotData);
@@ -393,6 +421,7 @@ void ViewScene::execute()
     warning("This ViewScene is displaying a saved black headlight due to an old bug. Headlight color is being switched to white. Please save and reload your network file to fix this.");
     state->setValue(Parameters::HeadLightColor, ColorRGB(1.0, 1.0, 1.0).toString());
   }
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
 }
 
 unsigned long ViewScene::getCurrentTimeSinceEpoch()

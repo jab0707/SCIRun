@@ -1127,8 +1127,9 @@ void ViewSceneDialog::newGeometryValue(bool forceAllObjectsToUpdate, bool clippi
   DEBUG_LOG_LINE_INFO
   LOG_DEBUG("ViewSceneDialog::newGeometryValue {} before locking", windowTitle().toStdString());
   RENDERER_LOG_FUNCTION_SCOPE;
-  Guard lock(Modules::Render::ViewSceneLockManager::get(getName())->staticMutexNeedToChange().get());
-
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
+  Guard lock(Modules::Render::ViewSceneLockManager::get(state_.get())->staticMutexNeedToChange().get());
+logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
   auto spire = impl_->mSpire.lock();
   if (!spire)
     return;
@@ -1219,15 +1220,22 @@ void ViewSceneDialog::newGeometryValue(bool forceAllObjectsToUpdate, bool clippi
 
 void ViewSceneDialog::lockMutex()
 {
-  Modules::Render::ViewSceneLockManager::get(getName())->screenShotMutex().lock();
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
+  Modules::Render::ViewSceneLockManager::get(state_.get())->screenShotMutex().lock();
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
 }
 
 void ViewSceneDialog::unblockExecution()
 {
-  auto& mutex = Modules::Render::ViewSceneLockManager::get(getName())->screenShotMutex();
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
+  auto& mutex = Modules::Render::ViewSceneLockManager::get(state_.get())->screenShotMutex();
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
   mutex.unlock();
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
   std::this_thread::sleep_for(std::chrono::duration<double, std::milli>(1));
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
   mutex.lock();
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
 }
 
 void ViewSceneDialog::frameFinished()
@@ -1831,7 +1839,9 @@ void ViewSceneDialog::selectObject(const int x, const int y, MouseButton button)
   auto geomDataPresent = false;
   {
     LOG_DEBUG("ViewSceneDialog::asyncExecute before locking");
-    Guard lock(Modules::Render::ViewSceneLockManager::get(getName())->staticMutexNeedToChange().get());
+    logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
+    Guard lock(Modules::Render::ViewSceneLockManager::get(state_.get())->staticMutexNeedToChange().get());
+    logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
     LOG_DEBUG("ViewSceneDialog::asyncExecute after locking");
 
     auto spire = impl_->mSpire.lock();
@@ -1886,6 +1896,8 @@ void ViewSceneDialog::selectObject(const int x, const int y, MouseButton button)
   }
   if (geomDataPresent)
     updateModifiedGeometries();
+
+  logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
 }
 
 bool ViewSceneDialog::checkForSelectedWidget(WidgetHandle widget)
@@ -1906,9 +1918,9 @@ bool ViewSceneDialog::checkForSelectedWidget(WidgetHandle widget)
 void ViewSceneDialog::restoreObjColor()
 {
   LOG_DEBUG("ViewSceneDialog::restoreObjColor before locking");
-
-  Guard lock(Modules::Render::ViewSceneLockManager::get(getName())->staticMutexNeedToChange().get());
-
+logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
+  Guard lock(Modules::Render::ViewSceneLockManager::get(state_.get())->staticMutexNeedToChange().get());
+logCritical("lock debug {} {}", __LINE__, __FUNCTION__);
   LOG_DEBUG("ViewSceneDialog::restoreObjColor after locking");
 
   impl_->widgetColorChanger_.reset();
