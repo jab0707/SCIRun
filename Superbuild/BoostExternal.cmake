@@ -68,7 +68,7 @@ IF(UNIX)
   ADD_DEFINITIONS(-DBOOST_NO_CXX11_ALLOCATOR)
 ENDIF()
 
-SET(boost_GIT_TAG "origin/v1.89.0")
+SET(boost_GIT_TAG "origin/v1.81.0")
 
 # TODO: set up 64-bit build detection
 # Boost Jam needs to have 64-bit build explicitly configured
