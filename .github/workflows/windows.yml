@@ -26,7 +26,7 @@ jobs:
     - name: Compile
       working-directory: bin
       shell: cmd
-      run: cmake --build . --config Release -j 3
+      run: cmake --build . --config Release -j 5
 
     - name: Test
       working-directory: bin/SCIRun
@@ -67,7 +67,7 @@ jobs:
     - name: Compile
       working-directory: bin
       shell: cmd
-      run: cmake --build . --config Release -j 3
+      run: cmake --build . --config Release -j 5
 
     - name: Package
       working-directory: bin/SCIRun
@@ -115,7 +115,7 @@ jobs:
     - name: Compile
       working-directory: bin
       shell: cmd
-      run: cmake --build . --config Release -j 3
+      run: cmake --build . --config Release -j 5
 
     - name: Package
       working-directory: bin/SCIRun
@@ -160,7 +160,7 @@ jobs:
     - name: Compile
       working-directory: bin
       shell: cmd
-      run: cmake --build . --config Release -j 3
+      run: cmake --build . --config Release -j 5
 
     - name: Package
       working-directory: bin/SCIRun
@@ -216,7 +216,7 @@ jobs:
     - name: Compile
       working-directory: bin
       shell: cmd
-      run: cmake --build . --config Release -j 3
+      run: cmake --build . --config Release -j 5
 
     - name: Package
       working-directory: bin/SCIRun
