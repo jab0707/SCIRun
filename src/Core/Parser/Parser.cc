@@ -32,6 +32,7 @@
 #include <sci_debug.h>
 #include <numbers>
 #include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
 using namespace SCIRun;
 
@@ -319,10 +320,10 @@ Parser::Parser()
   add_numerical_constant("Inf",std::numeric_limits<double>::infinity());
   add_numerical_constant("INF",std::numeric_limits<double>::infinity());
 
-  add_numerical_constant("pi",std::numbers::pi);
-  add_numerical_constant("Pi",std::numbers::pi);
-  add_numerical_constant("PI",std::numbers::pi);
-  add_numerical_constant("M_PI",std::numbers::pi);
+  add_numerical_constant("pi", M_PI);
+  add_numerical_constant("Pi", M_PI);
+  add_numerical_constant("PI", M_PI);
+  add_numerical_constant("M_PI", M_PI);
 }
 
 
