@@ -30,7 +30,7 @@
 #include <Core/Datatypes/Legacy/Base/Types.h>
 #include <iostream>
 #include <sci_debug.h>
-#include <boost/math/constants/constants.hpp>
+#include <numbers>
 #include <boost/algorithm/string.hpp>
 
 using namespace SCIRun;
@@ -319,10 +319,10 @@ Parser::Parser()
   add_numerical_constant("Inf",std::numeric_limits<double>::infinity());
   add_numerical_constant("INF",std::numeric_limits<double>::infinity());
 
-  add_numerical_constant("pi",boost::math::double_constants::pi);
-  add_numerical_constant("Pi",boost::math::double_constants::pi);
-  add_numerical_constant("PI",boost::math::double_constants::pi);
-  add_numerical_constant("M_PI",boost::math::double_constants::pi);
+  add_numerical_constant("pi",std::numbers::pi);
+  add_numerical_constant("Pi",std::numbers::pi);
+  add_numerical_constant("PI",std::numbers::pi);
+  add_numerical_constant("M_PI",std::numbers::pi);
 }
 
 
