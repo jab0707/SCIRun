@@ -25,7 +25,7 @@
 #  DEALINGS IN THE SOFTWARE.
 
 SET_PROPERTY(DIRECTORY PROPERTY "EP_BASE" ${ep_base})
-SET(freetype_GIT_TAG "origin/2.14.1")
+SET(freetype_GIT_TAG "origin/scirun-5.0.0")
 
 # If CMake ever allows overriding the checkout command or adding flags,
 # git checkout -q will silence message about detached head (harmless).
@@ -39,6 +39,12 @@ ExternalProject_Add(Freetype_external
     -DCMAKE_VERBOSE_MAKEFILE:BOOL=${CMAKE_VERBOSE_MAKEFILE}
     -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
     -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=ON
+    -DFT_DISABLE_ZLIB:BOOL=TRUE
+    -DFT_DISABLE_BZIP2=TRUE
+    -DFT_DISABLE_PNG=TRUE
+    -DFT_DISABLE_HARFBUZZ=TRUE
+    -DFT_DISABLE_BROTLI=TRUE
+    -DZLIB_LIBRARY_RELEASE:STRING=${Zlib_DIR}
 )
 
 ExternalProject_Get_Property(Freetype_external BINARY_DIR)
