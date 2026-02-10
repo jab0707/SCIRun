@@ -30,7 +30,7 @@
 
 #include <sstream>
 #include <Core/Datatypes/Color.h>
-#include <regex>
+#include <boost/regex.hpp>
 #include <boost/lexical_cast.hpp>
 
 using namespace SCIRun::Core::Datatypes;
@@ -61,14 +61,12 @@ ColorRGB::ColorRGB(const std::string& rgb) : r_(1.0), g_(1.0), b_(1.0), a_(1.0)
   {
     try
     {
-      static std::regex r("Color\\((.+),(.+),(.+)\\)");
-      #if 0 //TODO
+      static boost::regex r("Color\\((.+),(.+),(.+)\\)");
       boost::smatch what;
       regex_match(rgb, what, r);
       r_ = boost::lexical_cast<double>(what[1]);
       g_ = boost::lexical_cast<double>(what[2]);
       b_ = boost::lexical_cast<double>(what[3]);
-      #endif
     }
     catch (...)
     {

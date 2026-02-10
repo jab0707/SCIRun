@@ -30,7 +30,7 @@
 #include <Core/Datatypes/Legacy/Base/Types.h>
 #include <iostream>
 #include <sci_debug.h>
-#include <numbers>
+#include <cmath>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 
