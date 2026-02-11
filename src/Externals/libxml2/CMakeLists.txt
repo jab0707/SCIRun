@@ -25,7 +25,7 @@
 # CMake build scripts provided by Scientific Computing and Imaging Institute
 # Copyright (c) 2009 Scientific Computing and Imaging Institute, University of Utah.
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 IF(COMMAND CMAKE_POLICY)
   CMAKE_POLICY(VERSION 2.6)
 
