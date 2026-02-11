@@ -169,22 +169,6 @@ jobs:
       continue-on-error: true
       run: make test
 
-  mac-build-headless-13-intel:
-
-    runs-on: macOS-13
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v6
-
-    - name: Compile
-      run: ./build.sh -DBUILD_HEADLESS:BOOL=ON -DBUILD_TESTING:BOOL=ON -j4
-
-    - name: Test
-      working-directory: bin/SCIRun
-      continue-on-error: true
-      run: make test
-
   mac-build-headless-14-arm:
 
     runs-on: macOS-14
