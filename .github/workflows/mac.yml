@@ -21,17 +21,17 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       with:
-        version: 5.15.2
+        version: 6.10.2
         target: desktop
         host: mac
         setup-python: 'true'
         install-deps: true
 
     - name: Print out Qt directory
-      run: echo $Qt5_DIR; echo $Qt5_Dir
+      run: echo $Qt_DIR; echo $Qt_Dir
 
     - name: make
-      run: ./build.sh -DQt_PATH="${Qt5_DIR}"
+      run: ./build.sh -DQt_PATH="${Qt_DIR}"
 
     - name: Package
       working-directory: bin/SCIRun
@@ -75,7 +75,7 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       with:
-        version: 5.15.2
+        version: 6.10.2
         target: desktop
         host: mac
         setup-python: 'true'
@@ -114,17 +114,17 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       with:
-        version: 5.15.2
+        version: 6.10.2
         target: desktop
         host: mac
         setup-python: 'true'
         install-deps: true
 
     - name: Print out Qt directory
-      run: echo $Qt5_DIR; echo $Qt5_Dir
+      run: echo $Qt_DIR; echo $Qt_Dir
 
     - name: make
-      run: ./build.sh -DWITH_OSPRAY:BOOL=ON -DQt_PATH="${Qt5_DIR}"
+      run: ./build.sh -DWITH_OSPRAY:BOOL=ON -DQt_PATH="${Qt_DIR}"
 
     - name: Package
       working-directory: bin/SCIRun
