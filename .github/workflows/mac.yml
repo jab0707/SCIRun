@@ -31,7 +31,7 @@ jobs:
       run: echo $QT_ROOT_DIR; echo $QT_ROOT_DIR
 
     - name: make
-      run: ./build.sh -DQt_PATH="${QT_ROOT_DIR}"
+      run: ./build.sh -DQt_PATH="${QT_ROOT_DIR}" -DSCIRUN_QT_MIN_VERSION="6.3.1"
 
     - name: Package
       working-directory: bin/SCIRun
@@ -82,7 +82,7 @@ jobs:
         install-deps: true
 
     - name: make
-      run: ./build.sh -DBUILD_WITH_PYTHON=OFF -DQt_PATH="${QT_ROOT_DIR}"
+      run: ./build.sh -DBUILD_WITH_PYTHON=OFF -DQt_PATH="${QT_ROOT_DIR}" -DSCIRUN_QT_MIN_VERSION="6.3.1"
 
     - name: Package
       working-directory: bin/SCIRun
@@ -124,7 +124,7 @@ jobs:
       run: echo $QT_ROOT_DIR; echo $QT_ROOT_DIR
 
     - name: make
-      run: ./build.sh -DWITH_OSPRAY:BOOL=ON -DQt_PATH="${QT_ROOT_DIR}"
+      run: ./build.sh -DWITH_OSPRAY:BOOL=ON -DQt_PATH="${QT_ROOT_DIR}" -DSCIRUN_QT_MIN_VERSION="6.3.1"
 
     - name: Package
       working-directory: bin/SCIRun
