@@ -28,10 +28,10 @@ jobs:
         install-deps: true
 
     - name: Print out Qt directory
-      run: echo $Qt_DIR; echo $Qt_Dir
+      run: echo $QT_ROOT_DIR; echo $QT_ROOT_DIR
 
     - name: make
-      run: ./build.sh -DQt_PATH="${Qt_DIR}"
+      run: ./build.sh -DQt_PATH="${QT_ROOT_DIR}"
 
     - name: Package
       working-directory: bin/SCIRun
@@ -82,7 +82,7 @@ jobs:
         install-deps: true
 
     - name: make
-      run: ./build.sh -DBUILD_WITH_PYTHON=OFF -DQt_PATH="${Qt_Dir}"
+      run: ./build.sh -DBUILD_WITH_PYTHON=OFF -DQt_PATH="${QT_ROOT_DIR}"
 
     - name: Package
       working-directory: bin/SCIRun
@@ -121,10 +121,10 @@ jobs:
         install-deps: true
 
     - name: Print out Qt directory
-      run: echo $Qt_DIR; echo $Qt_Dir
+      run: echo $QT_ROOT_DIR; echo $QT_ROOT_DIR
 
     - name: make
-      run: ./build.sh -DWITH_OSPRAY:BOOL=ON -DQt_PATH="${Qt_DIR}"
+      run: ./build.sh -DWITH_OSPRAY:BOOL=ON -DQt_PATH="${QT_ROOT_DIR}"
 
     - name: Package
       working-directory: bin/SCIRun
