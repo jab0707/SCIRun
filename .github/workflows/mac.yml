@@ -12,7 +12,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -21,17 +21,17 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       with:
-        version: 5.15.2
+        version: 6.10.2
         target: desktop
         host: mac
         setup-python: 'true'
         install-deps: true
 
     - name: Print out Qt directory
-      run: echo $Qt5_DIR; echo $Qt5_Dir
+      run: echo $QT_ROOT_DIR; echo $QT_ROOT_DIR
 
     - name: make
-      run: ./build.sh -DQt_PATH="${Qt5_Dir}"
+      run: ./build.sh -DQt_PATH="${QT_ROOT_DIR}" -DSCIRUN_QT_MIN_VERSION="6.3.1"
 
     - name: Package
       working-directory: bin/SCIRun
@@ -43,7 +43,7 @@ jobs:
         ./repair_package.sh
 
     - name: Upload installer
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: SCIRunMacInstaller
         path: bin/SCIRun/SCIRun-5.0.beta.*-Darwin.pkg
@@ -66,7 +66,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -75,14 +75,14 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       with:
-        version: 5.15.2
+        version: 6.10.2
         target: desktop
         host: mac
         setup-python: 'true'
         install-deps: true
 
     - name: make
-      run: ./build.sh -DBUILD_WITH_PYTHON=OFF -DQt_PATH="${Qt5_Dir}"
+      run: ./build.sh -DBUILD_WITH_PYTHON=OFF -DQt_PATH="${QT_ROOT_DIR}" -DSCIRUN_QT_MIN_VERSION="6.3.1"
 
     - name: Package
       working-directory: bin/SCIRun
@@ -94,7 +94,7 @@ jobs:
         ./repair_package.sh
 
     - name: Upload installer
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: SCIRunMacNPInstaller
         path: bin/SCIRun/SCIRun-5.0.beta.*-Darwin.pkg
@@ -105,7 +105,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
@@ -114,17 +114,17 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       with:
-        version: 5.15.2
+        version: 6.10.2
         target: desktop
         host: mac
         setup-python: 'true'
         install-deps: true
 
     - name: Print out Qt directory
-      run: echo $Qt5_DIR; echo $Qt5_Dir
+      run: echo $QT_ROOT_DIR; echo $QT_ROOT_DIR
 
     - name: make
-      run: ./build.sh -DWITH_OSPRAY:BOOL=ON -DQt_PATH="${Qt5_Dir}"
+      run: ./build.sh -DWITH_OSPRAY:BOOL=ON -DQt_PATH="${QT_ROOT_DIR}" -DSCIRUN_QT_MIN_VERSION="6.3.1"
 
     - name: Package
       working-directory: bin/SCIRun
@@ -136,7 +136,7 @@ jobs:
         ./repair_package.sh
 
     - name: Upload installer
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: SCIRunMacOsprayInstaller
         path: bin/SCIRun/SCIRun-5.0.beta.*-Darwin.pkg
@@ -159,7 +159,119 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v6
+
+    - name: Compile
+      run: ./build.sh -DBUILD_HEADLESS:BOOL=ON -DBUILD_TESTING:BOOL=ON
+
+    - name: Test
+      working-directory: bin/SCIRun
+      continue-on-error: true
+      run: make test
+
+  mac-build-headless-14-arm:
+
+    runs-on: macOS-14
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Compile
+      run: ./build.sh -DBUILD_HEADLESS:BOOL=ON -DBUILD_TESTING:BOOL=ON
+
+    - name: Test
+      working-directory: bin/SCIRun
+      continue-on-error: true
+      run: make test
+
+  mac-build-headless-14-arm-slim:
+
+    runs-on: macOS-14
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Compile
+      run: ./build.sh -DBUILD_HEADLESS:BOOL=ON -DBUILD_TESTING:BOOL=ON -DBUILD_WITH_PYTHON:BOOL=OFF -j4
+
+    - name: Test
+      working-directory: bin/SCIRun
+      continue-on-error: true
+      run: make test
+
+  mac-build-headless-15-arm:
+
+    runs-on: macOS-15
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Compile
+      run: ./build.sh -DBUILD_HEADLESS:BOOL=ON -DBUILD_TESTING:BOOL=ON
+
+    - name: Test
+      working-directory: bin/SCIRun
+      continue-on-error: true
+      run: make test
+
+  mac-build-headless-15-arm-slim:
+
+    runs-on: macOS-15
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Compile
+      run: ./build.sh -DBUILD_HEADLESS:BOOL=ON -DBUILD_TESTING:BOOL=ON -DBUILD_WITH_PYTHON:BOOL=OFF -j4
+
+    - name: Test
+      working-directory: bin/SCIRun
+      continue-on-error: true
+      run: make test
+
+  mac-build-headless-15-intel:
+
+    runs-on: macOS-15-intel
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Compile
+      run: ./build.sh -DBUILD_HEADLESS:BOOL=ON -DBUILD_TESTING:BOOL=ON
+
+    - name: Test
+      working-directory: bin/SCIRun
+      continue-on-error: true
+      run: make test
+
+  mac-build-headless-15-intel-slim:
+
+    runs-on: macOS-15-intel
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Compile
+      run: ./build.sh -DBUILD_HEADLESS:BOOL=ON -DBUILD_TESTING:BOOL=ON -DBUILD_WITH_PYTHON:BOOL=OFF -j4
+
+    - name: Test
+      working-directory: bin/SCIRun
+      continue-on-error: true
+      run: make test
+
+  mac-build-headless-26:
+
+    runs-on: macOS-26
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
 
     - name: Compile
       run: ./build.sh -DBUILD_HEADLESS:BOOL=ON -DBUILD_TESTING:BOOL=ON
